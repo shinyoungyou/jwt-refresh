@@ -18,7 +18,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    refreshToken: String
+    refreshToken: [String] // support more than one device or more than one login at a time
 });
 
 module.exports = mongoose.model('User', userSchema);
