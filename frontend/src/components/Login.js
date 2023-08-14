@@ -1,8 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import useInput from '../hooks/useInput';
-import useToggle from '../hooks/useToggle';
 
 import axios from '../api/axios';
 const LOGIN_URL = '/auth';
@@ -17,10 +15,9 @@ const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
 
-    const [user, resetUser, userAttribs] = useInput('user', '')
+    const [user, setUser] = useState('');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-    const [check, toggleCheck] = useToggle('persist', false);
 
     useEffect(() => {
         userRef.current.focus();
@@ -41,10 +38,12 @@ const Login = () => {
                     withCredentials: true
                 }
             );
+            console.log(JSON.stringify(response?.data));
+            //console.log(JSON.stringify(response));
             const accessToken = response?.data?.accessToken;
             const roles = response?.data?.roles;
             setAuth({ user, pwd, roles, accessToken });
-            resetUser();
+            setUser('');
             setPwd('');
             navigate(from, { replace: true });
         } catch (err) {
@@ -73,7 +72,8 @@ const Login = () => {
                     id="username"
                     ref={userRef}
                     autoComplete="off"
-                    {...userAttribs}
+                    onChange={(e) => setUser(e.target.value)}
+                    value={user}
                     required
                 />
 
@@ -86,15 +86,6 @@ const Login = () => {
                     required
                 />
                 <button>Sign In</button>
-                <div className="persistCheck">
-                    <input
-                        type="checkbox"
-                        id="persist"
-                        onChange={toggleCheck}
-                        checked={check}
-                    />
-                    <label htmlFor="persist">Trust This Device</label>
-                </div>
             </form>
             <p>
                 Need an Account?<br />
