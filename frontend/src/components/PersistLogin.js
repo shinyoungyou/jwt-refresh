@@ -6,10 +6,10 @@ import useAuth from '../hooks/useAuth';
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();
-    const { auth } = useAuth();
+    const { auth, persist } = useAuth();
 
     useEffect(() => {
-        let isMounted = true;
+        let isMounted = true; // prevent memory leak
 
         const verifyRefreshToken = async () => {
             try {
@@ -37,7 +37,9 @@ const PersistLogin = () => {
 
     return (
         <>
-            {isLoading
+            {!persist
+                ? <Outlet />
+                :   isLoading
                     ? <p>Loading...</p>
                     : <Outlet />
             }
