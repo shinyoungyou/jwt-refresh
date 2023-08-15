@@ -13,7 +13,7 @@ const PersistLogin = () => {
 
         const verifyRefreshToken = async () => {
             try {
-                await refresh();
+                await refresh(); // send a request with refresh token to get a new access token 
             }
             catch (err) {
                 console.error(err);
